@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const app = express();
 
-const Book = require('./models/Book');
-const User = require('./models/User');
+const bookRoutes = require('./routes/book');
+const userRoutes = require('./routes/user');
 
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -19,19 +19,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/api/books', (req, res, next) => {
-  delete req.body._id;
-  const book = new Book({
-    ...req.body
-  });
-  book.save()
-    .then(() => res.status(201).json({ message: 'Livre enregistré !' }))
-    .catch(error => res.status(400).json({ error }));
-});
-
-app.get('/api/books', (req, res, next) => {
-  console.log('Récupération des livres');
-  res.status(200).json([]);
-});
+app.use('/api/books', bookRoutes);
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
