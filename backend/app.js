@@ -1,12 +1,11 @@
 const express = require('express');
-const mongoose = require('mongoose'); // <-- IL MANQUAIT CETTE LIGNE !
-require('dotenv').config(); // Décommente ça pour utiliser ton fichier .env
+const mongoose = require('mongoose');
+require('dotenv').config();
 const app = express();
 
 const Book = require('./models/Book');
 const User = require('./models/User');
 
-// Utilise la variable d'environnement pour plus de sécurité
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((err) => console.log('Connexion à MongoDB échouée !', err));
@@ -21,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 app.post('/api/books', (req, res, next) => {
-  delete req.body._id; // On s'assure que l'ID généré par MongoDB est utilisé
+  delete req.body._id;
   const book = new Book({
     ...req.body
   });
